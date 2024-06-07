@@ -1,25 +1,8 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_chat/core/themes/colors.dart';
-import 'package:get_chat/core/utils/exception.dart';
 import 'package:get_chat/core/utils/failure.dart';
-import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-enum RequestType { get, post }
-
-enum statuc {
-  success,
-  failed,
-  loading,
-  networkError,
-  error,
-  load,
-}
 
 class Helpers {
   void showSnackBar(BuildContext context, String text) {
@@ -29,7 +12,8 @@ class Helpers {
       ),
     );
   }
-   static toast(String msg, {ToastGravity? gravity}) {
+
+  static toast(String msg, {ToastGravity? gravity}) {
     FocusManager.instance.primaryFocus?.unfocus();
     return Fluttertoast.showToast(
       msg: msg,
@@ -40,19 +24,22 @@ class Helpers {
       fontSize: 16,
     );
   }
+  
 
-  static setString({required String key, required String value}) async {
+  static saveUser({required String key, required bool value}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(key, value);
+    prefs.setBool(key, value);
   }
 
-   static String convertFailureToMessage(Failure failure) {
+  static Future<bool> getUser({required String key}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(key) ?? false;
+  }
+
+  static String convertFailureToMessage(Failure failure) {
     if (failure is ServerFailure) {
       return failure.message;
     }
     return "Unknown error occurred";
   }
-
-
-  
 }

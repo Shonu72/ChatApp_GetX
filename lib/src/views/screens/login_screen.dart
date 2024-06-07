@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_chat/core/themes/colors.dart';
-import 'package:get_chat/core/utils/helpers.dart';
 import 'package:get_chat/src/controllers/auth_controllers.dart';
-import 'package:get_chat/src/views/screens/chat_screen.dart';
 import 'package:get_chat/src/views/screens/sign_up_screen.dart';
 import 'package:get_chat/src/views/widgets/app_button.dart';
+import 'package:get_chat/src/views/widgets/text_button.dart';
 import 'package:get_chat/src/views/widgets/textfield_widget.dart';
 import 'package:go_router/go_router.dart';
 
@@ -84,20 +83,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: "Login",
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    final username = mailController.text;
+                    final email = mailController.text;
                     final password = passwordController.text;
-                    await authController.loginUser(username, password);
-                    if (authController.errorMessage.value.isEmpty) {
-                      // context.pushNamed('/chat', );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChatPage(username: username)),
-                      );
-                      Helpers.toast("Login Successful");
-                    } else {
-                      Helpers.toast(authController.errorMessage.value);
-                    }
+                    await authController.signIn(
+                        email: email, password: password);
+                    GoRouter.of(context).goNamed('chat');
+                    // Navigator.push(
+                    //     context,
+                    //     MaterialPageRoute(
+                    //         builder: (context) =>  ChatScreen()));
                   }
                 },
               ),
@@ -119,18 +113,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     "Don't have an account?",
                     style: TextStyle(color: textWhiteColor, fontSize: 18),
                   ),
-                  TextButton(
+                  TextButtonWidget(
+                    text: "Sign Up",
                     onPressed: () {
+                      // context.pushNamed('register');
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const SignUpScreen()));
                     },
-                    child: const Text(
-                      "Sign up",
-                      style: TextStyle(color: primaryColor, fontSize: 18),
-                    ),
-                  )
+                  ),
                 ],
               )
             ],

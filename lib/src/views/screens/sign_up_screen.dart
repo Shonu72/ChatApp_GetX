@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_chat/core/themes/colors.dart';
+import 'package:get_chat/src/controllers/auth_controllers.dart';
 import 'package:get_chat/src/views/screens/chat_screen.dart';
+import 'package:get_chat/src/views/screens/group_chat_view_screen.dart';
 import 'package:get_chat/src/views/widgets/app_button.dart';
 import 'package:get_chat/src/views/widgets/textfield_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -16,19 +19,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController nameController = TextEditingController();
-
   final TextEditingController mailController = TextEditingController();
-
-  final TextEditingController phoneController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
-
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
 
   bool _isSigningUp = false;
 
-  // AuthController authController = Get.find<AuthController>();
+  AuthControllers authController = Get.find<AuthControllers>();
 
   @override
   Widget build(BuildContext context) {
@@ -62,19 +58,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 style: TextStyle(color: textWhiteColor, fontSize: 30),
               ),
               const SizedBox(height: 20),
-              // AuthTextFieldWidget(
-              //   prefixIcon: const Icon(Icons.person),
-              //   keyboardType: TextInputType.name,
-              //   hintText: "Name",
-              //   labelText: "Enter your name",
-              //   controller: nameController,
-              //   validator: (value) {
-              //     if (value.isEmpty) {
-              //       return "Please enter name";
-              //     }
-              //     return null;
-              //   },
-              // ),
+              AuthTextFieldWidget(
+                prefixIcon: const Icon(Icons.person),
+                keyboardType: TextInputType.name,
+                hintText: "Name",
+                labelText: "Enter your name",
+                controller: nameController,
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return "Please enter name";
+                  }
+                  return null;
+                },
+              ),
               AuthTextFieldWidget(
                 prefixIcon: const Icon(Icons.email),
                 keyboardType: TextInputType.emailAddress,
@@ -123,7 +119,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 text: "Register",
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // _register();
+                    authController.register(
+                        name: nameController.text.trim(),
+                        email: mailController.text,
+                        password: passwordController.text);
+                    context.goNamed('chat');
+                    // MaterialPageRoute(builder: (context) =>  ChatScreen());
                   }
                 },
               ),
@@ -147,7 +148,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Get.offNamed(Routes.login);
+                      context.pushNamed('login');
                     },
                     child: const Text(
                       "login",

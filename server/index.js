@@ -9,12 +9,8 @@ const messages = []
 
 io.on('connection', (socket) => {
   const username = socket.handshake.query.username
-  const chatID = socket.handshake.query.chatID
-  socket.join(chatID)
 
-  socket.on('disconnect', () => {
-    socket.leave(chatID)
-  })
+
   // for group chat
   socket.on('message', (data) => {
     const message = {
@@ -26,27 +22,19 @@ io.on('connection', (socket) => {
     io.emit('message', message)
   })
 
-  // })
 // one to one chat
-  socket.on('send_message', message => {
-        receiverChatID = message.receiverChatID
-        senderChatID = message.senderChatID
-        content = message.content
-
-        //Send message to only that particular room
-        socket.in(receiverChatID).emit('receive_message', {
-            'content': content,
-            'senderChatID': senderChatID,
-            'receiverChatID':receiverChatID,
-        })
-    })
+  socket.on('joinRoom', (roomId)=>{
+    socket.join(roomId);
+  })
+  socket.on('sendMessage', ({ roomId, message }) => {
+    io.to(roomId).emit('message', message);
+  })
 });
+
 
 server.listen(3000, () => {
   console.log('listening on *:3000');
 });
-
-
 
 
 

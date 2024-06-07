@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "127285327218",
+    "project_id": "getxchat-d0426",
+    "storage_bucket": "getxchat-d0426.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127285327218:android:38d5098b5d286d18bb99eb",
+        "android_client_info": {
+          "package_name": "com.example.get_chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFmqMcmL4My7nCbphV3LXg_FBW_zp4KyQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
