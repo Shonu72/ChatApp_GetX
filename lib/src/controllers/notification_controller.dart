@@ -26,15 +26,17 @@ class NotificationController extends GetxController {
       if (message.notification != null) {
         print("background notification tapped $message");
         notifications.add(message);
-        navigatorKey.currentContext!.push('/notification', extra: message);
+        navigatorKey.currentContext!.push('/notification');
       }
     });
 // get foreground message
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       String payloadData = jsonEncode(message.data);
       print("Foreground message received");
+
       if (message.notification != null) {
         print("Foreground message received : ${message.notification!.body}");
+        notifications.add(message);
         PushNotifications.showSampleNotifcation(
           title: message.notification!.title!,
           body: message.notification!.body!,
@@ -48,7 +50,7 @@ class NotificationController extends GetxController {
     if (message != null) {
       print("terminated state notification tapped : $message");
       notifications.add(message);
-      navigatorKey.currentContext!.push('/notification', extra: message);
+      navigatorKey.currentContext!.push('/notification');
     }
   }
 
@@ -62,4 +64,3 @@ class NotificationController extends GetxController {
 
   List<RemoteMessage> getNotificationList() => notifications.toList();
 }
-

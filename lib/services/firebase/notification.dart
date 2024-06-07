@@ -61,7 +61,7 @@ class PushNotifications {
 
   // on tap local notification in foreground
   static void onNotificationTap(NotificationResponse notificationResponse) {
-    navigatorKey.currentContext!.push('/notification', extra: notificationResponse);
+    navigatorKey.currentContext!.push('/notification');
   }
 
   // show a simple notification

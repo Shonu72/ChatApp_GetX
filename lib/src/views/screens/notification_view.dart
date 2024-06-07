@@ -1,50 +1,40 @@
 import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:get/get.dart';
+import 'package:get_chat/src/controllers/notification_controller.dart';
 
-class NotificationView extends StatefulWidget {
-  const NotificationView({super.key});
+class NotificationView extends StatelessWidget {
+  NotificationController notificationController =
+      Get.find<NotificationController>();
 
-  @override
-  State<NotificationView> createState() => _NotificationViewState();
-}
+  NotificationView({super.key});
 
-class _NotificationViewState extends State<NotificationView> {
   @override
   Widget build(BuildContext context) {
-    final RemoteMessage? message =
-        GoRouterState.of(context).extra as RemoteMessage?;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Notification Screen"),
+      ),
+      body: Obx(
+        () => ListView.builder(
+          itemCount: notificationController.notifications.length,
+          itemBuilder: (context, index) {
+            RemoteMessage message = notificationController.notifications[index];
+            String title = message.notification!.title!;
+            String body = message.notification!.body!;
+            String payload = jsonEncode(message.data);
 
-    if (message != null) {
-      String title = message.notification!.title!;
-      String body = message.notification!.body!;
-      String payload = jsonEncode(message.data);
-
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text("Notification Screen"),
+            return Card(
+              child: ListTile(
+                title: Text(title),
+                subtitle: Text(body),
+                trailing: Text(payload),
+              ),
+            );
+          },
         ),
-        body: Center(
-          child: Column(
-            children: [
-              Text(title),
-              Text(body),
-              Text(payload),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text("Notification Screen"),
-        ),
-        body: const Center(
-          child: Text("No notification"),
-        ),
-      );
-    }
+      ),
+    );
   }
 }

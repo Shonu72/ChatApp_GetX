@@ -48,7 +48,7 @@ class AppRouter {
           name: RouteConstnat.notification,
           path: '/notification',
           builder: ((context, state) {
-            return const NotificationView();
+            return  NotificationView();
           }))
     ],
   );
