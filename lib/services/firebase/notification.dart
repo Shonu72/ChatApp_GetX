@@ -1,8 +1,8 @@
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get_chat/main.dart';
-import 'package:get_chat/src/views/screens/notification_view.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 class PushNotifications {
@@ -11,7 +11,7 @@ class PushNotifications {
       _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   // request permission for notification
-  static Future init() async {
+  static Future init(BuildContext context) async {
     await _firebaseMessaging.requestPermission(
         alert: true,
         badge: true,
@@ -26,7 +26,7 @@ class PushNotifications {
   }
   // initialize local notification
 
-  static Future initLocalNotification() async {
+  static Future initLocalNotification(BuildContext context) async {
     // for android
     const AndroidInitializationSettings androidInitializationSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -54,14 +54,21 @@ class PushNotifications {
 
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: onNotificationTap,
-      onDidReceiveBackgroundNotificationResponse: onNotificationTap,
+      onDidReceiveNotificationResponse: (notificationResponse) {
+        onNotificationTap(context, notificationResponse);
+      },
+      onDidReceiveBackgroundNotificationResponse: (notificationResponse) {
+        onNotificationTap(context, notificationResponse);
+      },
     );
   }
 
   // on tap local notification in foreground
-  static void onNotificationTap(NotificationResponse notificationResponse) {
-    navigatorKey.currentContext!.push('/notification');
+  static void onNotificationTap(
+      BuildContext context, NotificationResponse notificationResponse) {
+    print("onNotificationTap ");
+    // context.pushNamed('notification');
+    navigator!.context.pushNamed('notification');
   }
 
   // show a simple notification

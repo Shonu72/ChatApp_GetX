@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_chat/core/themes/colors.dart';
+import 'package:get_chat/src/controllers/auth_controllers.dart';
 import 'package:get_chat/src/controllers/chat_controller.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class SingleChatScreen extends StatefulWidget {
-  const SingleChatScreen({super.key});
+  final String userID;
+  const SingleChatScreen({super.key, required this.userID});
 
   @override
   State<SingleChatScreen> createState() => _SingleChatScreenState();
@@ -12,15 +17,74 @@ class SingleChatScreen extends StatefulWidget {
 class _SingleChatScreenState extends State<SingleChatScreen> {
   final TextEditingController _messageInputController = TextEditingController();
   ChatController chatController = Get.find<ChatController>();
+  final username = Get.find<AuthControllers>().user!.uid;
+  @override
+  void initState() {
+    super.initState();
+    chatController.initSocket(username);
+  }
+
+  @override
+  void dispose() {
+    _messageInputController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Single Chat Screen"),
-      ),
+          title: const Text("GO Router path param"),
+          leading: IconButton(
+            onPressed: () {
+              context.pushNamed('chat');
+            },
+            icon: const Icon(Icons.arrow_back),
+          )),
       body: Column(
         children: [
-             Container(
+          Expanded(
+            child: GetX<ChatController>(
+              builder: (controller) => ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemBuilder: (context, index) {
+                  final message = controller.messages[index];
+                  return Wrap(
+                    alignment: message.senderUsername == username
+                        ? WrapAlignment.end
+                        : WrapAlignment.start,
+                    children: [
+                      Card(
+                        color: message.senderUsername == username
+                            ? textWhiteColor
+                            : Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment:
+                                message.senderUsername == username
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                            children: [
+                              Text(message.message),
+                              Text(
+                                DateFormat('hh:mm a').format(message.sentAt),
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+                separatorBuilder: (_, index) => const SizedBox(height: 5),
+                itemCount: controller.messages.length,
+              ),
+            ),
+          ),
+          Container(
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
             ),
@@ -55,7 +119,6 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
               ),
             ),
           )
-       
         ],
       ),
     );
