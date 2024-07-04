@@ -28,7 +28,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
   void dispose() {
     _messageInputController.dispose();
     super.dispose();
-    chatController.dispose();
+    // chatController.dispose();
   }
 
   @override
@@ -37,7 +37,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            context.pop();
+            // context.pushNamed('chat');
           },
           icon: const Icon(Icons.arrow_back),
         ),

@@ -16,9 +16,10 @@ class DependencyInjector {
   // }
 
   static void initializeController() {
+    // final navigationService = NavigationService().navigateToNotification;
     Get.lazyPut(() => AuthControllers());
     Get.lazyPut(() => ChatController());
     Get.put(NotificationController());
-    Get.put(AppRouter());
+    // Get.put(AppRouter.RouterFun());
   }
 }

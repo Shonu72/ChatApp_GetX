@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_chat/core/utils/constant.dart';
 import 'package:get_chat/src/controllers/auth_controllers.dart';
-import 'package:get_chat/src/views/screens/group_chat_view_screen.dart';
-import 'package:get_chat/src/views/screens/login_screen.dart';
-import 'package:get_chat/src/views/screens/notification_view.dart';
-import 'package:get_chat/src/views/screens/single_chat_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class ChatScreen extends StatelessWidget {
@@ -21,7 +18,7 @@ class ChatScreen extends StatelessWidget {
               icon: const Icon(Icons.logout),
               onPressed: () {
                 authController.signOut();
-                context.push('/login');
+                context.pushNamed('login');
                 // Navigator.push(
                 //   context,
                 //   MaterialPageRoute(builder: (context) => const LoginScreen()),
@@ -31,11 +28,6 @@ class ChatScreen extends StatelessWidget {
             IconButton(
                 onPressed: () {
                   context.pushNamed('notification');
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) => const NotificationView()),
-                  // );
                 },
                 icon: const Icon(Icons.notifications))
           ],
@@ -47,20 +39,22 @@ class ChatScreen extends StatelessWidget {
               subtitle: const Text("group chat messages"),
               leading: const Icon(Icons.people),
               onTap: () {
-                context.push('/groupchat');
+                context.goNamed('groupchat');
               },
             ),
-            // ListTile(
-            //   title: const Text("One to One"),
-            //   subtitle: const Text("One to one chat messages"),
-            //   leading: const Icon(Icons.person),
-            //   onTap: () {
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => SingleChatScreen()),
-            //     );
-            //   },
-            // ),
+            ListTile(
+              title: const Text("GoRouter"),
+              subtitle: const Text("testing go router params"),
+              leading: const Icon(Icons.person),
+              onTap: () {
+                context.goNamed(
+                  'singlechat',
+                  pathParameters: {'userID': authController.user!.uid},
+                  // extra: {'userID': authController.user!.uid},
+                  queryParameters: {'userID' : '123456' }
+                );
+              },
+            ),
           ],
         ));
   }

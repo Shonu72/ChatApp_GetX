@@ -1,11 +1,10 @@
-import 'dart:convert';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_chat/src/controllers/notification_controller.dart';
+import 'package:go_router/go_router.dart';
 
 class NotificationView extends StatelessWidget {
-  NotificationController notificationController =
+  final NotificationController notificationController =
       Get.find<NotificationController>();
 
   NotificationView({super.key});
@@ -14,23 +13,21 @@ class NotificationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Notification Screen"),
-      ),
+          title: const Text('Notifications'),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.pop();
+            },
+          )),
       body: Obx(
         () => ListView.builder(
           itemCount: notificationController.notifications.length,
           itemBuilder: (context, index) {
-            RemoteMessage message = notificationController.notifications[index];
-            String title = message.notification!.title!;
-            String body = message.notification!.body!;
-            String payload = jsonEncode(message.data);
-
-            return Card(
-              child: ListTile(
-                title: Text(title),
-                subtitle: Text(body),
-                trailing: Text(payload),
-              ),
+            final notification = notificationController.notifications[index];
+            return ListTile(
+              title: Text(notification.notification?.title ?? 'No Title'),
+              subtitle: Text(notification.notification?.body ?? 'No Body'),
             );
           },
         ),
